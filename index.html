@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Echoes of Apollo</title>
+<meta name="description" content="Ten NASA machines abandoned on the Moon and Mars: where they are, what they did, and when they went silent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* Layout: a field-archive register over a dark drifting backdrop. Hero pairs the title with a live "time since last contact" ledger; below it a survey plate, a silence timeline, a quiz. */
+:root{
+  --ground:#08070b; --ink:#efe9da; --dim:#b8b2a4; --rule:rgba(239,233,218,.2);
+  --moon:#e3c46d; --mars:#ea8a62; --panel:rgba(9,8,12,.78); --panel-solid:#0d0c11;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --w:var(--moon);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:1.0625rem;line-height:1.6;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ground)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;line-height:1;text-wrap:balance}
+p{margin:0 0 1em}
+:focus-visible{outline:2px solid var(--moon);outline-offset:3px}
+.m{--w:var(--moon)} .r{--w:var(--mars)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-size:.8125rem;letter-spacing:.02em}
+
+/* backdrop: the supplied slide video, darkened so text stays readable */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--ground)}
+.bg video,.bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.8) brightness(.95) contrast(1.08)}
+.bg::after{content:"";position:absolute;inset:0;background:radial-gradient(130% 100% at 50% 35%,rgba(8,7,11,.12),rgba(8,7,11,.62) 90%),linear-gradient(180deg,rgba(8,7,11,.2),rgba(8,7,11,.4))}
+main,header.top,footer{position:relative;z-index:1}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(8,7,11,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+header.top .wrap{display:flex;align-items:center;gap:1rem;min-height:54px}
+.brand{font-family:var(--serif);font-size:1.45rem;text-decoration:none;white-space:nowrap}
+.brand i{color:var(--moon)}
+nav{display:flex;gap:.1rem;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{font-size:.9rem;text-decoration:none;padding:.45rem .65rem;color:var(--dim);white-space:nowrap}
+nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{padding-block:clamp(2.5rem,7vw,5.5rem) clamp(2.5rem,6vw,4rem)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem);align-items:end}
+.team{color:var(--moon);margin-bottom:1.1rem}
+.hero h1{font-size:clamp(3.4rem,10.5vw,8.2rem);letter-spacing:-.015em}
+.hero h1 em{display:block;color:var(--moon)}
+.hero .lede{font-size:clamp(1.1rem,2vw,1.3rem);max-width:34ch;margin:1.4rem 0 1.6rem;color:#d8d2c3}
+.btns{display:flex;flex-wrap:wrap;gap:.7rem}
+.btn{font:600 .95rem var(--sans);padding:.8rem 1.2rem;border:1.5px solid var(--moon);background:var(--moon);color:#17120a;text-decoration:none;cursor:pointer;border-radius:3px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:rgba(239,233,218,.45)}
+.btn:hover{filter:brightness(1.08)}
+
+.ledger{background:var(--panel);border:1px solid var(--rule);padding:1rem 1.1rem 1.2rem;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ledger h2{font-size:1.5rem;margin-bottom:.15rem}
+.ledger p.cap{color:var(--dim);font-size:.9rem;margin-bottom:.7rem}
+.lrow{display:grid;grid-template-columns:.7rem minmax(0,1fr) auto;gap:.7rem;align-items:baseline;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--rule);color:inherit;font:inherit;padding:.5rem 0;cursor:pointer}
+.lrow:hover .ln{text-decoration:underline;text-underline-offset:3px}
+.dot{width:.55rem;height:.55rem;border-radius:50%;background:var(--w);align-self:center}
+.ln{font-size:.95rem;line-height:1.25}
+.lt{font-family:var(--mono);font-size:.8rem;color:var(--w);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* sections */
+section.s{padding-block:clamp(2.8rem,6vw,5rem);border-top:1px solid var(--rule);background:linear-gradient(180deg,rgba(8,7,11,.34),rgba(8,7,11,.5))}
+.sh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem 3rem;align-items:end;margin-bottom:2rem}
+.sh h2{font-size:clamp(2.2rem,5vw,3.8rem)}
+.sh p{color:var(--dim);margin:0;max-width:52ch}
+
+.tabs{display:flex;gap:.5rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.tab{font:500 .9rem var(--sans);padding:.5rem .95rem;background:transparent;color:var(--ink);border:1px solid var(--rule);cursor:pointer;border-radius:3px}
+.tab[aria-pressed="true"]{background:var(--ink);color:#111;border-color:var(--ink)}
+.reg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2.5rem}
+.plate{display:grid;gap:.35rem;text-align:left;background:none;color:inherit;font:inherit;border:0;border-top:2px solid var(--w);padding:1rem 0 1.4rem;cursor:pointer;min-width:0}
+.plate:hover h3{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.plate .where{color:var(--w)}
+.plate h3{font-size:1.9rem}
+.plate p{color:#d6d0c1;margin:.2rem 0 0;font-size:1rem}
+.plate .stat{display:flex;justify-content:space-between;gap:1rem;color:var(--dim);margin-top:.5rem;flex-wrap:wrap}
+
+/* drawer */
+.veil{position:fixed;inset:0;background:rgba(4,3,6,.6);z-index:70}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(600px,100%);background:var(--panel-solid);border-left:1px solid var(--rule);z-index:71;overflow-y:auto;padding:calc(1.3rem + env(safe-area-inset-top,0px)) max(1.2rem,env(safe-area-inset-right,0px)) calc(2rem + env(safe-area-inset-bottom,0px)) 1.4rem;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+.drawer[hidden],.veil[hidden]{display:none}
+.drawer .close{position:sticky;top:0;float:right;font:500 .9rem var(--sans);background:var(--ink);color:#111;border:0;padding:.45rem .8rem;cursor:pointer;border-radius:3px}
+.drawer h2{font-size:clamp(2.3rem,6vw,3.2rem);margin:.4rem 0 .5rem}
+.drawer .tag{color:var(--w);margin-bottom:1rem}
+.voice{border-left:2px solid var(--w);padding-left:1rem;margin:1.2rem 0 1.6rem;font-family:var(--serif);font-size:1.4rem;line-height:1.3;font-style:italic}
+.voice p{margin:0 0 .5rem}
+.drawer h3{font-family:var(--sans);font-size:.95rem;font-weight:600;margin:1.6rem 0 .5rem;color:var(--w)}
+dl.facts{margin:0;display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr);border-top:1px solid var(--rule)}
+dl.facts dt,dl.facts dd{margin:0;padding:.55rem 0;border-bottom:1px solid var(--rule);font-size:.97rem}
+dl.facts dt{color:var(--dim);padding-right:.8rem}
+.src{color:var(--dim);font-size:.85rem;margin-top:1.4rem}
+
+/* survey */
+.two{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:2rem 3rem;align-items:start}
+.fig{background:var(--panel);border:1px solid var(--rule);padding:.6rem}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{color:var(--dim);font-size:.85rem;padding:.6rem .4rem .3rem}
+svg text{font-family:var(--mono);font-size:11px;fill:var(--ink)}
+svg .dim{fill:var(--dim)}
+svg .grid{stroke:rgba(239,233,218,.14);stroke-width:1;fill:none}
+svg .mk{cursor:pointer}
+svg .mk:hover circle.c,svg .mk:focus circle.c{stroke:#fff;stroke-width:2}
+.legend{display:flex;gap:1.2rem;flex-wrap:wrap;color:var(--dim);font-size:.85rem;margin-top:.8rem}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.scroll{overflow-x:auto}
+.scroll svg{min-width:720px}
+
+.callouts p{max-width:48ch}
+.callouts strong{color:var(--moon);font-weight:600}
+
+/* quiz */
+.quiz{max-width:720px}
+.qm{display:flex;justify-content:space-between;color:var(--dim);margin-bottom:.7rem}
+.quiz h3{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1.2rem}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--rule);padding:.8rem 1rem;margin-bottom:.55rem;cursor:pointer;border-radius:3px}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.ok{border-color:#7fd1a0;background:rgba(127,209,160,.12)}
+.opt.no{border-color:#f08a8a;background:rgba(240,138,138,.12)}
+.opt:disabled{cursor:default;color:var(--ink)}
+.fb{margin:1rem 0;color:#dcd6c8}
+.score{font-family:var(--serif);font-size:4rem;line-height:1}
+
+.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem}
+.about h3{font-size:1.7rem;margin-bottom:.6rem}
+.about p,.about li{color:#d6d0c1;font-size:.98rem}
+.about ul{padding-left:1.1rem;margin:0}
+footer{border-top:1px solid var(--rule);padding-block:2rem;background:rgba(8,7,11,.85);color:var(--dim);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+
+/* photos */
+.worlds{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:1.4rem}
+.ph{margin:0;background:var(--panel);border:1px solid var(--rule);display:flex;flex-direction:column;min-width:0}
+.ph>img{display:block;width:100%;height:clamp(240px,34vw,430px);object-fit:cover}
+.ph.wide>img{height:auto;object-fit:cover}
+.ph figcaption{display:flex;gap:.9rem;align-items:flex-start;padding:.85rem 1rem 1rem;color:#d6d0c1;font-size:.92rem;line-height:1.5;border-top:2px solid var(--w)}
+.ph figcaption b{color:var(--w);font-weight:600}
+.ph .globe{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none}
+.dimg{margin:0 0 1.2rem;border:1px solid var(--rule)}
+.dimg img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:50% 55%}
+.dimg figcaption{padding:.5rem .7rem;font-size:.82rem;color:var(--dim);background:rgba(255,255,255,.03)}
+/* maps */
+.maps{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.mapbar{display:flex;flex-wrap:wrap;gap:.5rem .9rem;align-items:center;padding:.6rem .3rem 0}
+.mapbar .tab{padding:.35rem .7rem;font-size:.85rem}
+.chk{font-size:.85rem;color:var(--dim);display:inline-flex;gap:.35rem;align-items:center}
+.info{border:1px solid var(--rule);background:var(--panel);padding:1rem 1.1rem 1.2rem;border-top:2px solid var(--w);min-height:12rem}
+.info h3{font-size:1.9rem;margin:.2rem 0 .4rem}
+.info p{font-size:.97rem;color:#dcd6c8;margin:0 0 .7rem}
+.info .btn{padding:.55rem .9rem;font-size:.9rem}
+.sites{display:grid;gap:0;margin-top:.9rem}
+.sites button{display:grid;grid-template-columns:.7rem minmax(0,1fr) auto;gap:.7rem;align-items:baseline;text-align:left;background:none;border:0;border-top:1px solid var(--rule);color:inherit;font:inherit;padding:.5rem 0;cursor:pointer}
+.sites button[aria-pressed="true"] .ln{color:var(--w);font-weight:600}
+.sites button:hover .ln{text-decoration:underline;text-underline-offset:3px}
+svg .lbl{paint-order:stroke;stroke:#000;stroke-width:4px;stroke-linejoin:round;font-size:18px;font-weight:500}
+[hidden]{display:none!important}
+svg .sel circle.c{stroke:#fff;stroke-width:3}
+/* table */
+table.rec{width:100%;min-width:760px;border-collapse:collapse;font-size:.93rem}
+table.rec th,table.rec td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+table.rec th{font-weight:600;color:var(--dim);white-space:nowrap;padding:.4rem .7rem}
+table.rec th button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:.2rem 0;font-weight:600}
+table.rec th button:hover{color:var(--ink)}
+table.rec td.n button{font:inherit;color:var(--ink);background:none;border:0;text-align:left;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+table.rec td.t{font-family:var(--mono);font-size:.82rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.rec tr.m td.w{color:var(--moon)} table.rec tr.r td.w{color:var(--mars)}
+/* drawer journey */
+ol.jr{list-style:none;margin:0;padding:0;border-left:2px solid var(--w)}
+ol.jr li{position:relative;padding:.1rem 0 .85rem 1.1rem}
+ol.jr li::before{content:"";position:absolute;left:-6px;top:.45rem;width:10px;height:10px;border-radius:50%;background:var(--panel-solid);border:2px solid var(--w)}
+ol.jr li:last-child{padding-bottom:0}
+ol.jr time{display:block;font-family:var(--mono);font-size:.78rem;color:var(--w)}
+ol.jr span{font-size:.97rem}
+.drawer h3.sec{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--ink);margin:1.8rem 0 .5rem}
+.drawer .kw{font:600 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--w);display:block;margin-bottom:.2rem}
+
+@media (max-width:860px){
+  .worlds{grid-template-columns:minmax(0,1fr)}
+  .maps{grid-template-columns:minmax(0,1fr)}
+  .hero .wrap,.sh,.two,.about{grid-template-columns:minmax(0,1fr)}
+  .reg{grid-template-columns:minmax(0,1fr)}
+  dl.facts{grid-template-columns:minmax(0,7rem) minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+
+<div class="bg" aria-hidden="true">
+  <img src="assets/bg.jpg" alt="">
+  <video id="bgv" autoplay muted loop playsinline preload="auto" poster="assets/bg.jpg"><source src="assets/bg.mp4" type="video/mp4"></video>
+</div>
+
+<header class="top"><div class="wrap">
+  <a class="brand" href="#top">Echoes of <i>Apollo</i></a>
+  <nav aria-label="Sections">
+    <a href="#worlds">Worlds</a><a href="#register">Register</a><a href="#maps">Maps</a><a href="#silence">Timeline</a><a href="#records">Records</a><a href="#quiz">Quiz</a><a href="#about">About</a>
+  </nav>
+</div></header>
+
+<main id="top">
+  <section class="hero"><div class="wrap">
+    <div>
+      <p class="team mono">Team Echoes of Apollo · NASA Space Apps Challenge</p>
+      <h1>Abandoned,<em>not forgotten.</em></h1>
+      <p class="lede">Ten NASA machines still sit on the Moon and Mars. Every one did its job and then went quiet. This is where they are and what they left us.</p>
+      <div class="btns"><a class="btn" href="#register">Open the register</a><a class="btn ghost" href="#silence">See how they went quiet</a></div>
+    </div>
+    <aside class="ledger" aria-labelledby="lh">
+      <h2 id="lh">Time since last contact</h2>
+      <p class="cap">Counted from today. Select a machine to read its file.</p>
+      <div id="ledger"></div>
+    </aside>
+  </div></section>
+
+  <section class="s" id="worlds"><div class="wrap">
+    <div class="sh"><h2>Two worlds, ten stories</h2><p>Between 1967 and 2024 NASA left machines behind on the Moon and on Mars. These photographs show the kinds of hardware that stayed.</p></div>
+    <div class="worlds">
+      <figure class="ph m">
+        <img src="assets/apollo17-lm.jpg" alt="An Apollo lunar module standing on the Moon with gold foil and a hill behind" width="1173" height="741" loading="lazy">
+        <figcaption><img class="globe" src="assets/moon.jpg" alt="" width="64" height="64"><span><b>The Moon.</b> Four sites on the register. An Apollo lunar module sits on the surface, the same design as Eagle, Intrepid and Falcon (shown: Apollo 17). Its lower stage never left. Credit: NASA</span></figcaption>
+      </figure>
+      <figure class="ph r">
+        <img src="assets/mars-rover-concept.jpg" alt="Artist’s concept of a NASA Mars rover on rocky red terrain" width="657" height="686" loading="lazy">
+        <figcaption><img class="globe" src="assets/mars.jpg" alt="" width="64" height="64"><span><b>Mars.</b> Six sites on the register. Artist’s concept of a NASA Mars rover. This type of rover is still working, so it is not on the register. Credit: NASA/JPL-Caltech</span></figcaption>
+      </figure>
+    </div>
+    <figure class="ph wide r" style="margin-top:1.4rem">
+      <img src="assets/mars-rovers.jpg" alt="Four Mars rovers in artist’s concepts: Sojourner, Spirit, Opportunity and Curiosity" width="1268" height="716" loading="lazy">
+      <figcaption><span><b>Four generations of Mars rovers.</b> Sojourner, Spirit and Opportunity are on the register. Curiosity is still operating, so it is not. Credit: NASA/JPL-Caltech</span></figcaption>
+    </figure>
+  </div></section>
+
+  <section class="s" id="register"><div class="wrap">
+    <div class="sh"><h2>The register</h2><p>Four sites on the Moon, six on Mars. All of them were switched off, ran out of power, lost contact or reached the end of their last flight. Each file opens with what the machine would say if it could.</p></div>
+    <div class="tabs" role="group" aria-label="Filter by world">
+      <button class="tab" type="button" data-f="all" aria-pressed="true">All ten</button>
+      <button class="tab" type="button" data-f="moon" aria-pressed="false">Moon</button>
+      <button class="tab" type="button" data-f="mars" aria-pressed="false">Mars</button>
+    </div>
+    <div class="reg" id="reg"></div>
+  </div></section>
+
+  <section class="s" id="maps"><div class="wrap">
+    <div class="sh"><h2>Where they are</h2><p>Select a marker or a name to read about the machine. The Moon map sits on a photograph of the near side; the Mars map is a flat chart of the whole planet.</p></div>
+    <div class="tabs" role="group" aria-label="Choose a map">
+      <button class="tab" type="button" data-map="moon" aria-pressed="true">Moon</button>
+      <button class="tab" type="button" data-map="mars" aria-pressed="false">Mars</button>
+    </div>
+    <div class="two maps">
+      <figure class="fig" style="margin:0">
+        <svg id="mapsvg" viewBox="0 0 800 800" role="img" aria-label="Interactive map of abandoned equipment"></svg>
+        <div class="mapbar"><button class="tab" type="button" id="zin">Zoom to selection</button><button class="tab" type="button" id="zout">Reset view</button><label class="chk"><input type="checkbox" id="gridchk" checked> Grid</label><label class="chk" id="impwrap"><input type="checkbox" id="impchk" checked> Ascent-stage impacts</label></div>
+        <figcaption id="mapcap"></figcaption>
+      </figure>
+      <div>
+        <div class="info" id="info" aria-live="polite"></div>
+        <div class="sites" id="sites"></div>
+      </div>
+    </div>
+    <div class="two" id="moonextras" style="margin-top:2.4rem">
+      <div class="callouts">
+        <p><strong>180 m.</strong> Apollo 12’s Intrepid landed this close to Surveyor 3, which had sat there since April 1967. The crew walked over and cut off about 10 kg of it to bring home.</p>
+        <p><strong>17 m.</strong> Apollo 11’s seismometer station was set this far south of Eagle. Its laser reflector sits about 5 m beyond that.</p>
+        <p><strong>60 km.</strong> Apollo 12’s spent ascent stage hit the Moon about this far from its own seismometer and produced the first recorded artificial moonquake.</p>
+      </div>
+      <figure class="fig" style="margin:0">
+        <svg id="ruler" viewBox="0 0 440 206" role="img" aria-label="Distances from the lunar module at Apollo 11 and Apollo 12 sites, 0 to 200 metres"></svg>
+        <figcaption>Distance from the lunar module, in metres.</figcaption>
+      </figure>
+    </div>
+  </div></section>
+
+  <section class="s" id="silence"><div class="wrap">
+    <div class="sh"><h2>Short lives, long silences</h2><p>Solid bars show how long each machine worked after landing. The dashed line runs from its last contact to today. Most have now been silent for far longer than they worked.</p></div>
+    <div class="fig scroll"><svg id="gantt" viewBox="0 0 940 400" role="img" aria-label="Timeline of operating life and silence for ten machines"></svg></div>
+    <div class="legend"><span><svg width="26" height="8"><rect width="26" height="8" fill="#e3c46d"/></svg>Moon, operating</span><span><svg width="26" height="8"><rect width="26" height="8" fill="#ea8a62"/></svg>Mars, operating</span><span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#b8b2a4" stroke-dasharray="3 3" stroke-width="1.5"/></svg>Silent since</span></div>
+  </div></section>
+
+  <section class="s" id="records"><div class="wrap">
+    <div class="sh"><h2>Mission records</h2><p>Dates and figures from NASA’s mission pages and the NSSDCA catalogue. Select a column heading to sort. The “silent for” column counts from today.</p></div>
+    <div class="fig scroll"><table class="rec" id="rec"></table></div>
+  </div></section>
+
+  <section class="s" id="quiz"><div class="wrap">
+    <div class="sh"><h2>Did it stick?</h2><p>Six questions drawn straight from the files above.</p></div>
+    <div class="quiz" id="qz"></div>
+  </div></section>
+
+  <section class="s" id="about"><div class="wrap">
+    <div class="sh"><h2>About this project</h2><p>Built by Team Echoes of Apollo for the NASA International Space Apps Challenge.</p></div>
+    <div class="about">
+      <div><h3>The challenge</h3><p>“Abandoned but Not Forgotten: Storytelling about NASA’s Discarded Equipment on the Moon and Mars.” We chose to follow each machine from landing to silence, using only what the mission records say.</p></div>
+      <div><h3>What is included</h3><ul><li>Apollo 11, 12 and 15 lunar modules and their surface experiments</li><li>Surveyor 3</li><li>Viking 1 lander, Mars Pathfinder and Sojourner</li><li>Spirit, Opportunity, InSight, Ingenuity</li></ul><p style="margin-top:.8rem">Active rovers, orbiters, asteroid missions and deep-space probes are left out on purpose.</p></div>
+      <div><h3>Sources</h3><ul><li>NASA Space Science Data Coordinated Archive (NSSDCA): Apollo 11, 12 and 15 Lunar Module / surface experiment pages</li><li>NASA Science mission pages: Surveyor 3, Viking 1, Mars Pathfinder, Mars Exploration Rovers, InSight, Ingenuity</li><li>Siddiqi, A. A., <em>Beyond Earth</em>, NASA History Program Office, 2018</li></ul></div>
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap"><span>Echoes of Apollo · Team project for NASA Space Apps</span><span>Not an official NASA product.</span></div></footer>
+
+<div class="veil" id="veil" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dh" hidden></aside>
+
+<script>
+const TODAY=new Date();
+const D=(y,m,d)=>new Date(Date.UTC(y,m-1,d));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fmt=d=>MON[d.getUTCMonth()]+" "+d.getUTCDate()+", "+d.getUTCFullYear();
+function ym(a,b){let y=b.getUTCFullYear()-a.getUTCFullYear(),m=b.getUTCMonth()-a.getUTCMonth();if(b.getUTCDate()<a.getUTCDate())m--;if(m<0){y--;m+=12}return y+" y "+m+" m"}
+function ran(a,b){const d=Math.round((b-a)/864e5);if(d<120)return d+" days";const y=d/365.25;return y.toFixed(1)+" years"}
+const dec=d=>d.getUTCFullYear()+(d-D(d.getUTCFullYear(),1,1))/(365.25*864e5);
+
+/* ---------- DATA (from the supplied NASA/NSSDCA pages) ---------- */
+const A=[
+{id:"a11",w:"moon",name:"Apollo 11 Eagle and EASEP",short:"Apollo 11 · Tranquility Base",place:"Mare Tranquillitatis",lat:0.67416,lon:23.47314,
+ start:D(1969,7,21),end:D(1969,8,27),endLabel:"Last command accepted",
+ tag:"The first crewed landing. The lower half of the lunar module and a small science station stayed behind.",
+ voice:["I was the first vehicle to land people on the Moon.","My lower half is still at Tranquility Base, along with a plaque, a flag and a seismometer.","My upper half carried two men home, was jettisoned, and nobody recorded when it hit."],
+ facts:[["Landed","20 July 1969, 20:17:40 UT, 0.674° N, 23.473° E"],["Crew","Neil Armstrong, Buzz Aldrin"],["On the surface","21 h 36 min; about 250 m walked; 21.55 kg of samples"],["Left behind","Descent stage (2,034 kg dry, with stowed equipment), EASEP station (48 kg), laser retroreflector, plaque, flag, a packet of memorial items"],["Ascent stage","Jettisoned 22 July. Fate unknown; assumed to have crashed within one to four months"],["Station powered by","Two solar panels, so it could only work in daylight"]],
+ why:"The station was switched on at 04:40 UT on 21 July. On 3 August it was stopped by ground command shortly before lunar sunset as its power fell, exactly as planned. It woke for a second lunar day, but near noon on 27 August it stopped accepting commands and the experiment was ended. It ran about 30 °C hotter than its planned maximum and still worked.",
+ src:"NSSDCA, Apollo 11 Lunar Module / EASEP"},
+{id:"s3",w:"moon",name:"Surveyor 3",short:"Surveyor 3 · Ocean of Storms",place:"Oceanus Procellarum",lat:-3.0,lon:-23.41,
+ start:D(1967,4,20),end:D(1967,5,4),endLabel:"Last contact",
+ tag:"A robot scout that proved the Moon could carry a lunar module, then waited for visitors.",
+ voice:["I bounced twice before I settled, and then I sent 6,326 pictures.","I dug four trenches to test the soil. It behaved like wet sand.","Two and a half years later, two men walked up and took my scoop and my camera home."],
+ facts:[["Landed","20 April 1967, 3° S, 23.41° W (bounced twice first)"],["Mass","998 kg"],["Instruments","TV camera and a surface sampler that reached 1.5 m and dug 18 cm deep"],["Results","Four trenches, four bearing tests, thirteen impact tests. Soil bearing strength about 0.7 kg per cm²"],["Visited","Second Apollo 12 moonwalk (19 November 1969 US time). The crew had landed 180 m away"],["Taken home","About 10 kg, including the soil scoop and camera system"]],
+ why:"Last contact came on 4 May 1967, two days after the lunar night began. The cold ended it. The rest of the lander is still where it landed.",
+ src:"NASA, What was Surveyor 3?; NSSDCA, Apollo 12"},
+{id:"a12",w:"moon",name:"Apollo 12 Intrepid and ALSEP",short:"Apollo 12 · Ocean of Storms",place:"Oceanus Procellarum",lat:-3.0128,lon:-23.4219,
+ start:D(1969,11,19),end:D(1977,9,30),endLabel:"Station shut down",
+ tag:"A precision landing beside Surveyor 3, and the first full science station on the Moon.",
+ voice:["I put down 180 m from a spacecraft that had been waiting since 1967.","My crew left a nuclear-powered station that listened for moonquakes for eight years.","My own ascent stage was steered into the Moon on purpose, and the seismometer felt it."],
+ facts:[["Landed","19 November 1969, 06:54:35 UT, 3.013° S, 23.422° W"],["Crew","Pete Conrad, Alan Bean"],["Moon walks","Two, 7 h 45 min total, 1.35 km. 34.35 kg of samples"],["Station","ALSEP with six instruments, incl. seismometer and magnetometer, at 3.009° S, 23.425° W"],["Power","SNAP-27 generator, about 70 W from plutonium-238 (half-life 89.6 years)"],["Ascent stage","Crashed 3.94° S, 338.80° E, about 60 km from the seismometer. First recorded artificial moonquake"]],
+ why:"Early on, the TV camera was pointed at the Sun and its tube was damaged, so the walks went untelevised. The ALSEP itself worked for years. On 30 September 1977 it was shut down along with the other ALSEP stations.",
+ src:"NSSDCA, Apollo 12 Lunar Module / ALSEP"},
+{id:"a15",w:"moon",name:"Apollo 15 Falcon and ALSEP",short:"Apollo 15 · Hadley–Apennine",place:"Foot of the Apennine mountains",lat:26.13239,lon:3.6333,
+ start:D(1971,7,31),end:D(1977,9,30),endLabel:"Station shut down",
+ tag:"The first lunar rover, a seven-instrument station, and a tiny memorial to fourteen space explorers.",
+ voice:["I carried a rover to the Moon and my crew drove 27.9 km.","They left a plaque and a small figure for fourteen American and Soviet space explorers who had died.","Then they dropped a hammer and a feather, and both landed together."],
+ facts:[["Landed","30 July 1971, 22:16:29 UT, 26.132° N, 3.633° E"],["Crew","David Scott, James Irwin"],["Surface time","66 h 55 min, three moonwalks totalling 18 h 35 min"],["Collected","77.31 kg of rock and soil"],["Station","ALSEP with seven instruments, including a heat-flow probe, at 26.134° N, 3.630° E"],["Ascent stage","Jettisoned 3 August 1971 and struck the Moon about two hours later at 26.36° N, 0.25° E"]],
+ why:"The station was turned on at 18:37 UT on 31 July 1971. Like Apollo 12’s, it was shut down on 30 September 1977 and has been silent since.",
+ src:"NSSDCA, Apollo 15 Lunar Module / ALSEP"},
+{id:"v1",w:"mars",name:"Viking 1 lander",short:"Viking 1 · Chryse Planitia",place:"Chryse Planitia",lat:22.483,lon:-47.94,
+ start:D(1976,7,20),end:D(1982,11,11),endLabel:"Contact lost",
+ tag:"The first fully successful landing on Mars, lost to one wrong command.",
+ voice:["I took the first photograph ever made on the surface of Mars, minutes after landing.","I scooped soil and looked for life. The answer was never quite yes or no.","In 1982 Earth sent me a faulty command, and I never answered again."],
+ facts:[["Landed","20 July 1976, 11:53:06 UT, 22.483° N, 47.94° W, about 28 km from target"],["Mass","978 kg (lander)"],["Temperatures","−86 °C before dawn to −33 °C in the afternoon"],["Renamed","Thomas Mutch Memorial Station, January 1982"],["Experiments","Cameras, soil chemistry, a biology laboratory, weather sensors. The seismometer never worked"],["Result on life","A weak positive in one test, but the organic-compound test was negative"]],
+ why:"It sent daily, then weekly weather reports for years. On 11 November 1982 a faulty command interrupted communications, and every attempt to regain contact failed.",
+ src:"NASA, Viking 1"},
+{id:"pf",w:"mars",name:"Mars Pathfinder and Sojourner",short:"Pathfinder · Ares Vallis",place:"Ares Vallis",lat:null,lon:null,
+ start:D(1997,7,4),end:D(1997,9,27),endLabel:"Final transmission",
+ tag:"Landed in a ball of airbags and sent out the first rover on Mars.",
+ voice:["I hit Mars at 14 metres per second and bounced about fifteen times.","I was renamed the Carl Sagan Memorial Station.","My rover Sojourner weighed 10.6 kg and drove down my ramp on my second Martian day."],
+ facts:[["Landed","4 July 1997, Ares Vallis, an ancient flood plain"],["Landing method","Parachute plus airbags; bounced up to 15 m high and rolled for 2.5 min"],["Rover","Sojourner, 10.6 kg, 30 cm tall, rolled out on the night of 5 July (sol 2)"],["Returned","2.3 billion bits: over 16,500 lander images, 550 rover images, 15+ chemical analyses"],["Findings","Rounded pebbles suggested running water. Dust is magnetic. Dust devils and morning water-ice clouds were seen"],["Ended","27 September 1997"]],
+ why:"The final transmission arrived on 27 September 1997, about three months after landing. The mission was designed to demonstrate technology, and it outlived that goal.",
+ src:"NASA, Mars Pathfinder"},
+{id:"sp",w:"mars",name:"Spirit",short:"Spirit · Gusev Crater",place:"Gusev Crater",lat:null,lon:null,
+ start:D(2004,1,3),end:D(2010,3,22),endLabel:"Last contact",
+ tag:"One of two twin rovers that confirmed liquid water once shaped Mars.",
+ voice:["I landed in Gusev Crater, a possible former lake.","I drove 7.7 km, farther than anyone planned.","My landing platform is still there, surrounded by crumpled airbags."],
+ facts:[["Landed","3 January 2004, Gusev Crater"],["Landing station","Columbia Memorial Station"],["Distance driven","4.8 miles (7.7 km)"],["Goal","Look for signs of past water"],["Mission ended","2010"],["Twin","Opportunity, landed on the opposite side of Mars"]],
+ why:"NASA’s mission page records that Spirit concluded its mission in 2010. The exact last-contact date shown here (22 March 2010) comes from NASA JPL’s mission news, not from the data pages we were given.",
+ src:"NASA, Mars Exploration Rovers"},
+{id:"op",w:"mars",name:"Opportunity",short:"Opportunity · Meridiani Planum",place:"Meridiani Planum",lat:null,lon:null,
+ start:D(2004,1,24),end:D(2018,6,10),endLabel:"Last contact",
+ tag:"Built for 90 days, lasted 14 years, and fell silent under a planet-wide dust storm.",
+ voice:["I landed in Eagle Crater, where mineral deposits hinted at a wet past.","I drove 45.16 km and held the off-Earth driving record until 2026.","In June 2018 a dust storm covered the whole planet, and my solar panels went dark."],
+ facts:[["Landed","24 January 2004, Meridiani Planum"],["Distance driven","28.06 miles (45.16 km)"],["Record","Held the off-Earth driving record until 11 October 2026, when Perseverance passed it"],["Lifespan","About 14 years, more than 300,000 raw images"],["Largest panorama","“Lion King”: 558 images, taken in 2004"],["Last contact","10 June 2018"]],
+ why:"Opportunity last communicated with Earth on 10 June 2018, as a planet-wide dust storm blanketed the solar-powered rover’s location. It could not recharge, and Earth never heard from it again.",
+ src:"NASA, Mars Exploration Rovers"},
+{id:"in",w:"mars",name:"InSight",short:"InSight · Elysium Planitia",place:"Elysium Planitia",lat:4.5,lon:135.9,
+ start:D(2018,11,26),end:D(2022,12,15),endLabel:"End of mission",
+ tag:"A lander that stayed in one spot and listened to the inside of Mars.",
+ voice:["I never drove anywhere. My job was to measure Mars’s pulse.","My arm lifted a seismometer off my deck and set it on the ground.","I recorded the sound of the Martian wind and the shaking of quakes."],
+ facts:[["Landed","26 November 2018, 11:52:59 PT, western Elysium Planitia, about 4.5° N, 135.9° E"],["Distance to Curiosity","About 600 km"],["Arm","1.8 m long"],["Instruments","Seismometer, heat-flow probe"],["Launched with","Two MarCO CubeSats, the first interplanetary CubeSats"],["Mission ended","15 December 2022"]],
+ why:"Marsquakes revealed lumps of impactor debris scattered through the mantle. NASA’s orbiter has since photographed the retired lander to study how dust moves across the surface.",
+ src:"NASA, InSight Lander"},
+{id:"ig",w:"mars",name:"Ingenuity",short:"Ingenuity · Jezero Crater",place:"Jezero Crater",lat:null,lon:null,
+ start:D(2021,2,18),end:D(2024,1,25),endLabel:"Mission completed",
+ tag:"A 1.8 kg helicopter planned for five flights. It flew 72.",
+ voice:["I was only supposed to fly five times in thirty days.","I flew 72 times in nearly three years, as high as 24 m.","Now I stand where I landed, and I showed the next missions what is possible."],
+ facts:[["Landed","18 February 2021, Jezero Crater, carried under Perseverance"],["First flight","19 April 2021. The first powered, controlled flight on another planet"],["Last flight","18 January 2024"],["Totals","72 flights, 128.8 min in the air, 17.0 km flown"],["Records","Top speed 10 m/s, highest altitude 24 m (79 ft)"],["Size","Rotors about 1.2 m tip to tip. Mass 1.8 kg"]],
+ why:"The mission was declared complete on 25 January 2024, a week after its last flight. It was a technology demonstration that became a scout for the rover. NASA’s planned SkyFall helicopters build on it.",
+ src:"NASA, Ingenuity Mars Helicopter"}
+];
+
+/* ---------- STORY + RECORD FIELDS ---------- */
+const IMG={
+ lm:{src:"assets/apollo17-lm.jpg",alt:"An Apollo lunar module on the Moon",cap:"An Apollo lunar module on the surface (shown: Apollo 17). Same design as this mission’s. Credit: NASA"},
+ s3:{src:"assets/apollo12-surveyor3.jpg",alt:"An Apollo 12 astronaut beside the Surveyor 3 lander, with the lunar module on the horizon",cap:"An Apollo 12 astronaut at Surveyor 3, with the lunar module Intrepid on the horizon. Credit: NASA"},
+ mars:{src:"assets/mars.jpg",alt:"Mars from space",cap:"Mars from space."},
+ soj:{src:"assets/sojourner.jpg",alt:"Artist’s concept of the Sojourner rover beside a boulder",cap:"Artist’s concept of Sojourner. Credit: NASA/JPL-Caltech"},
+ spi:{src:"assets/spirit.jpg",alt:"Artist’s concept of the Spirit rover",cap:"Artist’s concept of Spirit. Credit: NASA/JPL-Caltech"},
+ opp:{src:"assets/opportunity.jpg",alt:"Artist’s concept of the Opportunity rover",cap:"Artist’s concept of Opportunity. Credit: NASA/JPL-Caltech"}
+};
+const X={
+a11:{img:IMG.lm,land:D(1969,7,20),result:"First crewed landing; seismometer and laser reflector left on the surface",
+ mission:"Land two astronauts at Tranquility Base, set up the first Early Apollo Scientific Experiment Package and bring samples home.",
+ purpose:"Show that people could land on another world and leave again, and begin a record of surface science with a seismometer, a dust detector and a laser reflector.",
+ journey:[["16 Jul 1969","Launch on a Saturn 5 from Cape Canaveral."],["20 Jul 1969","Eagle lands at 20:17:40 UT. “Houston, Tranquility Base here. The Eagle has landed.”"],["21 Jul 1969","Armstrong steps out at 02:56:15 UT. The station is switched on from Earth at 04:40 UT."],["21 Jul 1969","Liftoff after 21 h 36 min on the surface."],["3 Aug 1969","The station is stopped ahead of lunar sunset as its power falls."],["27 Aug 1969","It stops accepting commands and the experiment ends."]],
+ legacy:"EASEP was the forerunner of the ALSEP stations that flew on later missions. Its laser retroreflector needed no power and was left about 5 m from the station.",
+ rec:[["NSSDCA / COSPAR ID","1969-059C"],["Launch","16 July 1969, Saturn 5, Cape Canaveral"],["Spacecraft mass","15,103 kg (ascent and descent stages with propellant)"]]},
+s3:{img:IMG.s3,land:D(1967,4,20),result:"Showed lunar soil could carry a lunar module; parts returned by Apollo 12",
+ mission:"Soft-land on the Moon and test the surface with a TV camera and a digging arm.",
+ purpose:"Find out whether lunar soil was solid enough to support an Apollo lunar module.",
+ journey:[["17 Apr 1967","Launch on an Atlas Centaur. The first Surveyor to start from Earth parking orbit."],["20 Apr 1967","Lands at 00:04:17 UT after two bounces, in southeastern Oceanus Procellarum."],["20 Apr 1967","Within an hour it begins sending the first of 6,326 TV pictures."],["4 May 1967","Last contact, two days after the lunar night began."],["19 Nov 1969","On the second Apollo 12 moonwalk (US time), astronauts visit it and recover the scoop and camera."]],
+ legacy:"The bearing-strength result cleared the way for crewed landings. The returned parts let scientists measure what nearly two and a half years on the Moon’s surface had done to them.",
+ rec:[["Spacecraft","Surveyor-C"],["Launch","17 April 1967, Atlas Centaur AC-12, Cape Canaveral"],["Spacecraft mass","997.9 kg"]]},
+a12:{img:IMG.s3,land:D(1969,11,19),result:"Pinpoint landing; first full ALSEP; first recorded artificial moonquake",
+ mission:"Land within walking distance of Surveyor 3 and set up the first full ALSEP science station.",
+ purpose:"Show that a pinpoint landing was possible and place long-lived instruments on the Moon.",
+ journey:[["14 Nov 1969","Launch on a Saturn 5."],["19 Nov 1969","Intrepid lands at 06:54:35 UT, within about 180 m of Surveyor 3."],["19 Nov 1969","First moonwalk: ALSEP deployed and powered on at 14:21 UT. The TV camera is ruined by the Sun."],["20 Nov 1969","Second moonwalk: a 1.3 km traverse and a visit to Surveyor 3."],["20 Nov 1969","Liftoff at 14:25:47 UT after 31 h 31 min on the Moon."],["20 Nov 1969","The jettisoned ascent stage is crashed on purpose, the first recorded artificial moonquake."],["30 Sep 1977","ALSEP shut down."]],
+ legacy:"The crash gave seismologists a recorded impact at a known place and time. The station kept listening for almost eight years.",
+ rec:[["NSSDCA / COSPAR ID","1969-099C"],["Launch","14 November 1969, Saturn 5, Cape Canaveral"],["Spacecraft mass","15,235 kg"]]},
+a15:{img:IMG.lm,land:D(1971,7,30),result:"First lunar rover; seven-instrument station with a heat-flow probe",
+ mission:"Land at the foot of the Apennines with a rover and a seven-instrument ALSEP.",
+ purpose:"Explore far beyond walking range, sample mountain and rille terrain, and measure heat flowing out of the Moon.",
+ journey:[["26 Jul 1971","Launch on a Saturn 5."],["30 Jul 1971","Falcon lands at 22:16:29 UT. Scott later stands up through the top hatch."],["31 Jul 1971","First moonwalk: the rover is driven for the first time and the ALSEP is deployed (on at 18:37 UT)."],["1–2 Aug 1971","Second and third moonwalks. About 27.9 km covered in total."],["2 Aug 1971","Liftoff at 17:11:22 UT after 66 h 55 min on the surface."],["3 Aug 1971","The ascent stage impacts at 26.36° N, 0.25° E."],["30 Sep 1977","ALSEP shut down."]],
+ legacy:"The first lunar rover worked well within 5 km of the lander. A plaque and small figure remember the fourteen American and Soviet space explorers who had died.",
+ rec:[["NSSDCA / COSPAR ID","1971-063C"],["Launch","26 July 1971, Saturn 5, Cape Canaveral"],["Spacecraft mass","16,430 kg"]]},
+v1:{img:IMG.mars,land:D(1976,7,20),result:"First fully successful Mars landing; first photo from the surface",
+ mission:"Land on Mars, photograph it, analyse the soil and look for signs of life, with an orbiter overhead.",
+ purpose:"Collect evidence on whether life could exist on Mars.",
+ journey:[["20 Aug 1975","Launch on a Titan IIIE-Centaur."],["19 Jun 1976","The orbiter enters Mars orbit."],["20 Jul 1976","The lander touches down at 11:53:06 UT and takes the first photograph from the surface."],["28 Jul 1976","The robot arm delivers the first soil samples to the biology laboratory."],["Nov 1976","Primary mission ends. Extended and monitoring missions follow."],["7 Aug 1980","The orbiter is shut down after running out of attitude-control propellant."],["11 Nov 1982","The lander is lost after a faulty command."]],
+ legacy:"Viking began the surface exploration of Mars that continues today. Its soil data showed an abundance of sulfur unlike anything known on Earth or the Moon.",
+ rec:[["Spacecraft","Viking-B (launched as Viking 1)"],["Launch","20 August 1975, Titan IIIE-Centaur, Cape Canaveral"],["Mass","3,527 kg total, 978 kg lander"]]},
+pf:{img:IMG.soj,land:D(1997,7,4),result:"First airbag landing and first rover on Mars; hints of a warm, wet past",
+ mission:"Demonstrate a new way to land on Mars and deliver the first rover.",
+ purpose:"Prove that a parachute and airbags could place a lander on the surface, and study rocks, soil and weather.",
+ journey:[["4 Dec 1996","Launch on a Delta II 7925 from Cape Canaveral."],["4 Jul 1997","Lands in Ares Vallis, bouncing about 15 times."],["5 Jul 1997","Sojourner rolls down the ramp on its second Martian day."],["27 Sep 1997","Final data transmission."]],
+ legacy:"Rounded pebbles and other findings suggested Mars was once warm and wet. The airbag landing was a first, and the lander was renamed for Carl Sagan.",
+ rec:[["Launch","4 December 1996, Delta II 7925, Cape Canaveral"],["Rover mass","10.6 kg (Sojourner)"],["Data returned","2.3 billion bits"]]},
+sp:{img:IMG.spi,land:D(2004,1,3),result:"With Opportunity, confirmed that water long stood on the surface of Mars",
+ mission:"Land in Gusev Crater and look for signs of past water.",
+ purpose:"Test whether Gusev, a possible former lake in a giant impact crater, once held liquid water.",
+ journey:[["3 Jan 2004","Lands at Gusev Crater. The landing site is named Columbia Memorial Station."],["18–19 Jan 2004","On its 16th Martian day it photographs the landing site and the hills ahead."],["2010","The mission concludes after 7.7 km of driving."]],
+ legacy:"Together with Opportunity, Spirit confirmed that water had been long standing on the surface of Mars in ancient times.",
+ rec:[["Mission","Mars Exploration Rovers"],["Type","Rover (one of a twin pair)"],["Distance driven","7.7 km"]]},
+op:{img:IMG.opp,land:D(2004,1,24),result:"Drove 45.16 km and held the off-Earth distance record until 2026",
+ mission:"Land at Meridiani Planum and read the rock record for evidence of water.",
+ purpose:"Visit a place where mineral deposits suggested that Mars had a wet history.",
+ journey:[["24 Jan 2004","Lands at Meridiani Planum, in Eagle Crater."],["2004","Takes the 558-image “Lion King” panorama of Eagle Crater and the plains."],["Mar 2014","A self-portrait shows wind has cleaned much of the dust from its panels."],["10 Jun 2018","Last contact, as a planet-wide dust storm covers its location."],["11 Oct 2026","Perseverance passes its driving record."]],
+ legacy:"For years it held the record for distance driven on another world: 28.06 miles (45.16 km). Its twin and it rewrote the early history of Mars.",
+ rec:[["Mission","Mars Exploration Rovers"],["Type","Rover (one of a twin pair)"],["Distance driven","45.16 km"]]},
+in:{img:IMG.mars,land:D(2018,11,26),result:"Marsquakes revealed lumps of impactor debris in the mantle",
+ mission:"Land near the equator and listen to the inside of Mars.",
+ purpose:"Take the planet’s vital signs: its pulse, temperature and reflexes.",
+ journey:[["5 May 2018","Launch from Vandenberg on an Atlas V-401, with two MarCO CubeSats."],["26 Nov 2018","Lands in Elysium Planitia at 11:52:59 PT."],["1 Dec 2018","Sensors record the Martian wind at 5 to 7 m/s."],["15 Dec 2022","End of mission."]],
+ legacy:"Marsquake data shows that rock from ancient impacts lies scattered in giant lumps through the mantle.",
+ rec:[["Launch","5 May 2018, Atlas V-401, Vandenberg"],["Basis","Built on the proven design of Mars Phoenix"],["Arm length","1.8 m"]]},
+ig:{img:IMG.mars,land:D(2021,2,18),result:"First powered, controlled flight on another planet; 72 flights",
+ mission:"Show that powered flight is possible in the thin Martian air.",
+ purpose:"A technology demonstration planned for no more than five test flights in 30 days.",
+ journey:[["30 Jul 2020","Launch, riding with the Perseverance rover."],["18 Feb 2021","Lands in Jezero Crater."],["19 Apr 2021","First flight, the first powered, controlled flight on another planet."],["18 Jan 2024","Flight 72, its last."],["25 Jan 2024","Mission declared complete."]],
+ legacy:"It scouted for the rover and paved the way for future aerial explorers. NASA’s planned SkyFall helicopters build on it.",
+ rec:[["Launch","30 July 2020, Cape Canaveral, with Perseverance"],["Mass","1.8 kg"],["Flight totals","72 flights, 128.8 min, 17.0 km"]]}
+};
+A.forEach(a=>Object.assign(a,X[a.id]));
+/* Mars coordinates: Viking 1 and InSight are in the supplied pages. The rest are approximate values from NASA mission pages. */
+const MC={v1:{lat:22.483,lon:-47.94,approx:false},in:{lat:4.5,lon:135.9,approx:false},pf:{lat:19.13,lon:-33.22,approx:true},sp:{lat:-14.57,lon:175.48,approx:true},op:{lat:-1.95,lon:-5.53,approx:true},ig:{lat:18.44,lon:77.45,approx:true}};
+A.forEach(a=>{if(MC[a.id]){a.lat=MC[a.id].lat;a.lon=MC[a.id].lon;a.approx=MC[a.id].approx}});
+const byId=Object.fromEntries(A.map(a=>[a.id,a]));
+const cls=a=>a.w==="moon"?"m":"r";
+
+/* ---------- LEDGER ---------- */
+function drawLedger(){
+  const rows=[...A].sort((a,b)=>a.end-b.end);
+  document.getElementById("ledger").innerHTML=rows.map(a=>`<button type="button" class="lrow ${cls(a)}" data-id="${a.id}"><span class="dot"></span><span class="ln">${a.short.split(" · ")[0]===a.short?a.short:a.name}</span><span class="lt">${ym(a.end,TODAY)}</span></button>`).join("");
+}
+
+/* ---------- REGISTER ---------- */
+let filter="all";
+function drawReg(){
+  const list=A.filter(a=>filter==="all"||a.w===filter);
+  document.getElementById("reg").innerHTML=list.map(a=>`<button type="button" class="plate ${cls(a)}" data-id="${a.id}">
+    <span class="where mono">${a.w==="moon"?"MOON":"MARS"} · ${a.place}</span>
+    <h3>${a.name}</h3>
+    <p>${a.tag}</p>
+    <span class="stat mono"><span>${fmt(a.start)} to ${fmt(a.end)}</span><span>Silent ${ym(a.end,TODAY)}</span></span></button>`).join("");
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  filter=b.dataset.f;
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-pressed",String(t===b)));
+  drawReg();
+}));
+
+/* ---------- DRAWER ---------- */
+let lastFocus=null;
+const drawer=document.getElementById("drawer"),veil=document.getElementById("veil");
+function openDossier(id){
+  const a=byId[id];if(!a)return;
+  lastFocus=document.activeElement;
+  drawer.className="drawer "+cls(a);
+  const co=a.lat!=null?`${Math.abs(a.lat).toFixed(2)}° ${a.lat<0?"S":"N"}, ${Math.abs(a.lon).toFixed(2)}° ${a.lon<0?"W":"E"}${a.approx?" (approx.)":""}`:null;
+  drawer.innerHTML=`<button class="close" type="button" id="cl">Close</button>
+   <p class="mono tag">${a.w==="moon"?"MOON":"MARS"} · ${a.place}</p>
+   <h2 id="dh">${a.name}</h2>
+   <p>${a.tag}</p>
+   ${a.img?`<figure class="dimg"><img src="${a.img.src}" alt="${a.img.alt}"><figcaption>${a.img.cap}</figcaption></figure>`:""}
+   <div class="voice">${a.voice.map(v=>`<p>${v}</p>`).join("")}</div>
+   <h3 class="sec"><span class="kw">Mission</span>What it set out to do</h3><p>${a.mission}</p>
+   <h3 class="sec"><span class="kw">Purpose</span>Why it was built</h3><p>${a.purpose}</p>
+   <h3 class="sec"><span class="kw">Journey</span>From launch to silence</h3>
+   <ol class="jr">${a.journey.map(j=>`<li><time>${j[0]}</time><span>${j[1]}</span></li>`).join("")}</ol>
+   <h3 class="sec"><span class="kw">Legacy</span>What it left behind</h3><p>${a.legacy}</p>
+   <p>${a.why}</p>
+   <p class="mono" style="color:var(--w)">${a.endLabel}: ${fmt(a.end)} · ${ym(a.end,TODAY)} ago</p>
+   <h3>Key facts</h3>
+   <dl class="facts">${a.facts.map(f=>`<dt>${f[0]}</dt><dd>${f[1]}</dd>`).join("")}${co?`<dt>Location</dt><dd>${co}</dd>`:""}</dl>
+   <h3>NASA record</h3>
+   <dl class="facts">${a.rec.map(f=>`<dt>${f[0]}</dt><dd>${f[1]}</dd>`).join("")}</dl>
+   <p class="src">Source: ${a.src}</p>`;
+  drawer.hidden=false;veil.hidden=false;drawer.scrollTop=0;
+  document.getElementById("cl").focus();
+  document.getElementById("cl").addEventListener("click",closeD);
+}
+function closeD(){drawer.hidden=true;veil.hidden=true;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+veil.addEventListener("click",closeD);
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&!drawer.hidden)closeD();
+  if(e.key==="Tab"&&!drawer.hidden){const f=drawer.querySelectorAll("button,a[href]");if(!f.length)return;const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+});
+document.addEventListener("click",e=>{const t=e.target.closest("[data-id]");if(t&&!t.closest("#drawer")&&!t.closest("#mapsvg"))openDossier(t.dataset.id)});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#gantt .mk")){e.preventDefault();openDossier(e.target.dataset.id)}});
+
+/* ---------- INTERACTIVE MAPS ---------- */
+let mapWorld="moon",selId="a12",zoomed=false;
+const LON_C=-4.3,R_MOON=395; /* orientation measured from the supplied Moon photograph: Tycho, Copernicus and Mare Crisium line up */
+const mx=(lat,lon)=>400+R_MOON*Math.cos(lat*Math.PI/180)*Math.sin((lon-LON_C)*Math.PI/180);
+const my=lat=>400-R_MOON*Math.sin(lat*Math.PI/180);
+const vis=(lat,lon)=>Math.cos(lat*Math.PI/180)*Math.cos((lon-LON_C)*Math.PI/180)>0.02;
+const IMPACTS=[{lat:-3.94,lon:-21.2,t:"Apollo 12 ascent stage",dx:16,dy:20,an:"start"},{lat:26.36,lon:0.25,t:"Apollo 15 ascent stage",dx:-14,dy:-12,an:"end"}];
+const MLAB={a11:{dx:-16,dy:-14,an:"end"},a15:{dx:18,dy:8,an:"start"},a12:{dx:-20,dy:-14,an:"end"},s3:{dx:-6,dy:44,an:"end"}};
+function path(pts){let d="",pen=false;pts.forEach(p=>{if(p){d+=(pen?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1);pen=true}else pen=false});return d}
+function marker(a,x,y,lab){
+  const moon=a.w==="moon",sel=a.id===selId;
+  const ring=a.id==="s3";
+  return `<g class="mk${sel?" sel":""}" tabindex="0" role="button" data-id="${a.id}" aria-label="${a.name}"><circle class="c" cx="${x}" cy="${y}" r="${ring?16:11}" fill="${ring?"none":(moon?"#e3c46d":"#ea8a62")}" stroke="${moon?"#e3c46d":"#ea8a62"}" stroke-width="${ring?2.5:2}" ${a.approx?'stroke-dasharray="3 3"':''}/><text class="lbl" x="${x+lab.dx}" y="${y+lab.dy}" text-anchor="${lab.an}" fill="#fff">${a.short.split(" · ")[1]===undefined?a.name:(moon?a.name.replace(" and ALSEP","").replace(" and EASEP","").replace(" Eagle","").replace(" Intrepid","").replace(" Falcon",""):a.name.replace(" lander","").replace(" and Sojourner",""))}</text></g>`;
+}
+function drawMap(){
+  const svg=document.getElementById("mapsvg");
+  const grid=document.getElementById("gridchk").checked,imp=document.getElementById("impchk").checked;
+  document.getElementById("impwrap").hidden=mapWorld!=="moon";
+  let s="";
+  if(mapWorld==="moon"){
+    svg.setAttribute("viewBox",zoomed?zoomBox():"0 0 800 800");
+    s+=`<rect width="800" height="800" fill="#050409"/><image href="assets/moon.jpg" x="0" y="0" width="800" height="800" preserveAspectRatio="none"/>`;
+    if(grid){
+      for(let lo=-60;lo<=60;lo+=30){const pts=[];for(let la=-90;la<=90;la+=3)pts.push(vis(la,lo)?[mx(la,lo),my(la)]:null);s+=`<path d="${path(pts)}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>`}
+      for(let la=-60;la<=60;la+=30){const pts=[];for(let lo=-95;lo<=95;lo+=3)pts.push(vis(la,lo)?[mx(la,lo),my(la)]:null);s+=`<path d="${path(pts)}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>`}
+    }
+    if(imp)IMPACTS.forEach(q=>{const x=mx(q.lat,q.lon),y=my(q.lat);s+=`<g><circle cx="${x}" cy="${y}" r="7" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M${x-4} ${y-4}l8 8m0-8l-8 8" stroke="#fff" stroke-width="1.4"/><text class="lbl" x="${x+q.dx}" y="${y+q.dy}" text-anchor="${q.an}" fill="#fff" style="font-size:15px">${q.t}</text></g>`});
+    ["s3","a12","a11","a15"].forEach(id=>{const a=byId[id];s+=marker(a,mx(a.lat,a.lon),my(a.lat),MLAB[id])});
+    document.getElementById("mapcap").textContent="Lunar near side. Orthographic view over a photograph; markers use coordinates measured from Lunar Reconnaissance Orbiter images. Grid every 30°.";
+  }else{
+    svg.setAttribute("viewBox",zoomed?zoomBox():"0 0 720 360");
+    const X=lo=>(lo+180)*2,Y=la=>(90-la)*2;
+    s+=`<defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e3a2a"/><stop offset=".5" stop-color="#a65a3a"/><stop offset="1" stop-color="#6b3a2c"/></linearGradient></defs><rect width="720" height="360" fill="url(#mg)"/>`;
+    if(grid){for(let lo=-150;lo<=150;lo+=30)s+=`<path d="M${X(lo)} 0V360" stroke="#fff" stroke-opacity=".22"/><text x="${X(lo)+3}" y="352" style="font-size:11px;fill:#f3e3d3">${Math.abs(lo)}°${lo<0?"W":"E"}</text>`;
+      for(let la=-60;la<=60;la+=30)s+=`<path d="M0 ${Y(la)}H720" stroke="#fff" stroke-opacity="${la===0?.45:.22}"/><text x="4" y="${Y(la)-3}" style="font-size:11px;fill:#f3e3d3">${la===0?"Equator":Math.abs(la)+"°"+(la<0?"S":"N")}</text>`}
+    [["Olympus Mons",18.65,-133.8],["Valles Marineris",-13,-59],["Hellas Planitia",-42.4,70.5]].forEach(f=>{s+=`<g><circle cx="${X(f[2])}" cy="${Y(f[1])}" r="2.5" fill="#f3e3d3"/><text x="${X(f[2])+6}" y="${Y(f[1])+3}" style="font-size:12px;fill:#f3e3d3;font-style:italic">${f[0]}</text></g>`});
+    const ML={v1:{dx:-12,dy:-10,an:"end"},pf:{dx:12,dy:-8,an:"start"},op:{dx:12,dy:18,an:"start"},ig:{dx:12,dy:-8,an:"start"},in:{dx:-12,dy:-10,an:"end"},sp:{dx:-12,dy:-10,an:"end"}};
+    ["v1","pf","op","ig","in","sp"].forEach(id=>{const a=byId[id];s+=marker(a,X(a.lon),Y(a.lat),ML[id]).replace('r="9"','r="8"').replace('class="lbl"','class="lbl" style="font-size:14px"')});
+    document.getElementById("mapcap").textContent="Mars, equirectangular chart. Viking 1 and InSight use coordinates from the supplied NASA pages; dashed markers are approximate positions from NASA mission pages. Landmarks are for orientation.";
+  }
+  svg.innerHTML=s;
+  svg.style.aspectRatio=mapWorld==="moon"?"1 / 1":"2 / 1";
+}
+function zoomBox(){
+  const a=byId[selId];let x,y,w;
+  if(mapWorld==="moon"){x=mx(a.lat,a.lon);y=my(a.lat);w=300}else{x=(a.lon+180)*2;y=(90-a.lat)*2;w=180}
+  const h=mapWorld==="moon"?w:w/2;
+  const W=mapWorld==="moon"?800:720,H=mapWorld==="moon"?800:360;
+  x=Math.min(Math.max(x-w/2,0),W-w);y=Math.min(Math.max(y-h/2,0),H-h);
+  return `${x} ${y} ${w} ${h}`;
+}
+function drawInfo(){
+  const list=A.filter(a=>a.w===mapWorld);
+  if(!byId[selId]||byId[selId].w!==mapWorld)selId=list[0].id;
+  const a=byId[selId];
+  const co=`${Math.abs(a.lat).toFixed(2)}° ${a.lat<0?"S":"N"}, ${Math.abs(a.lon).toFixed(2)}° ${a.lon<0?"W":"E"}${a.approx?" (approx.)":""}`;
+  document.getElementById("info").className="info "+cls(a);
+  document.getElementById("info").innerHTML=`<p class="mono" style="color:var(--w);margin:0">${a.place} · ${co}</p><h3>${a.name}</h3><p>${a.tag}</p><p class="mono" style="color:var(--dim)">${fmt(a.start)} to ${fmt(a.end)} · silent ${ym(a.end,TODAY)}</p><button type="button" class="btn" data-id="${a.id}">Read the full file</button>`;
+  document.getElementById("sites").innerHTML=list.map(b=>`<button type="button" class="${cls(b)}" data-sel="${b.id}" aria-pressed="${b.id===selId}"><span class="dot"></span><span class="ln">${b.name}</span><span class="lt">${b.start.getUTCFullYear()}</span></button>`).join("");
+  document.getElementById("moonextras").hidden=mapWorld!=="moon";
+}
+function selectSite(id){selId=id;drawMap();drawInfo()}
+document.querySelectorAll("[data-map]").forEach(b=>b.addEventListener("click",()=>{
+  mapWorld=b.dataset.map;zoomed=false;
+  document.querySelectorAll("[data-map]").forEach(t=>t.setAttribute("aria-pressed",String(t===b)));
+  selId=A.find(a=>a.w===mapWorld).id;drawMap();drawInfo();
+}));
+document.getElementById("zin").addEventListener("click",()=>{zoomed=true;drawMap()});
+document.getElementById("zout").addEventListener("click",()=>{zoomed=false;drawMap()});
+document.getElementById("gridchk").addEventListener("change",drawMap);
+document.getElementById("impchk").addEventListener("change",drawMap);
+document.addEventListener("click",e=>{const t=e.target.closest("[data-sel]");if(t)selectSite(t.dataset.sel);
+  const m=e.target.closest("#mapsvg .mk");if(m)selectSite(m.dataset.id)});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("#mapsvg .mk")){e.preventDefault();selectSite(e.target.dataset.id)}});
+
+/* ---------- RECORDS TABLE ---------- */
+let sortKey="end",sortDir=1;
+const COLS=[["name","Machine"],["w","World"],["land","Landed"],["end","Last contact"],["ran","Worked"],["sil","Silent for"],["result","Key result"]];
+function recVal(a,k){return k==="ran"?(a.end-a.start):k==="sil"?-(a.end.getTime()):k==="w"?a.w:k==="name"?a.name:k==="result"?a.result:a[k].getTime()}
+function drawRec(){
+  const rows=[...A].sort((a,b)=>{const x=recVal(a,sortKey),y=recVal(b,sortKey);return (x>y?1:x<y?-1:0)*sortDir});
+  document.getElementById("rec").innerHTML=`<thead><tr>${COLS.map(c=>`<th scope="col" aria-sort="${sortKey===c[0]?(sortDir>0?"ascending":"descending"):"none"}"><button type="button" data-sort="${c[0]}">${c[1]}${sortKey===c[0]?(sortDir>0?" ▲":" ▼"):""}</button></th>`).join("")}</tr></thead><tbody>${rows.map(a=>`<tr class="${cls(a)}"><td class="n"><button type="button" data-id="${a.id}">${a.name}</button></td><td class="w">${a.w==="moon"?"Moon":"Mars"}</td><td class="t">${fmt(a.land)}</td><td class="t">${fmt(a.end)}</td><td class="t">${ran(a.start,a.end)}</td><td class="t">${ym(a.end,TODAY)}</td><td>${a.result}</td></tr>`).join("")}</tbody>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sort]");if(!b)return;const k=b.dataset.sort;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1}drawRec()});
+
+function drawRuler(){
+  const x=m=>20+m*2.0;
+  let s="";
+  for(let m=0;m<=200;m+=50){s+=`<path class="grid" d="M${x(m)} 14V160"/><text class="dim" x="${x(m)}" y="178" text-anchor="middle">${m} m</text>`}
+  const rows=[
+   {y:46,label:"Apollo 11",items:[{m:0,t:"Eagle",c:"#e3c46d"},{m:17,t:"EASEP",c:"#e3c46d"},{m:100,t:"farthest walk",c:"#b8b2a4"}],end:100},
+   {y:132,label:"Apollo 12",items:[{m:0,t:"Intrepid",c:"#e3c46d"},{m:180,t:"Surveyor 3",c:"#e3c46d"}],end:180}];
+  rows.forEach(r=>{
+    s+=`<text class="dim" x="20" y="${r.y-36}">${r.label}</text><line x1="${x(0)}" x2="${x(r.end)}" y1="${r.y}" y2="${r.y}" stroke="#efe9da" stroke-opacity=".5" stroke-width="2"/>`;
+    r.items.forEach((it,i)=>{s+=`<circle cx="${x(it.m)}" cy="${r.y}" r="6" fill="${it.c}"/><text x="${x(it.m)}" y="${r.y+(i%2?-12:20)}" text-anchor="${it.m>150?"end":it.m===0?"start":"middle"}">${it.t}${it.m?" "+it.m+" m":""}</text>`});
+  });
+  document.getElementById("ruler").innerHTML=s;
+}
+
+/* ---------- SILENCE TIMELINE ---------- */
+function drawGantt(){
+  const y0=1966,y1=2027,L=210,R=790,T=34,H=34;
+  const X=d=>L+(dec(d)-y0)/(y1-y0)*(R-L);
+  const rows=[...A].sort((a,b)=>a.start-b.start);
+  let s="";
+  for(let y=1970;y<=2020;y+=10)s+=`<path class="grid" d="M${X(D(y,1,1))} ${T-8}V${T+rows.length*H}"/><text class="dim" x="${X(D(y,1,1))}" y="${T-14}" text-anchor="middle">${y}</text>`;
+  const tx=X(TODAY);
+  s+=`<path d="M${tx} ${T-8}V${T+rows.length*H}" stroke="#efe9da" stroke-width="1.2" fill="none"/><text x="${tx}" y="${T-14}" text-anchor="middle">today</text>`;
+  rows.forEach((a,i)=>{
+    const y=T+i*H+H/2,col=a.w==="moon"?"#e3c46d":"#ea8a62",x1=X(a.start),x2=Math.max(X(a.end),x1+4);
+    s+=`<g class="mk" tabindex="0" role="button" data-id="${a.id}" aria-label="${a.name}"><rect x="0" y="${y-H/2}" width="940" height="${H}" fill="transparent"/>
+     <text x="0" y="${y+4}" style="font-size:12px">${a.short.split(" · ")[0]===a.short?a.short:a.name.replace(" and ALSEP","").replace(" and EASEP","").replace(" lander","").replace(" and Sojourner","")}</text>
+     <rect x="${x1}" y="${y-6}" width="${x2-x1}" height="12" fill="${col}"/>
+     <line x1="${x2}" x2="${tx}" y1="${y}" y2="${y}" stroke="#b8b2a4" stroke-width="1.5" stroke-dasharray="3 4"/>
+     <text class="dim" x="${R+14}" y="${y+4}">ran ${ran(a.start,a.end)}</text></g>`;
+  });
+  document.getElementById("gantt").setAttribute("viewBox",`0 0 940 ${T+rows.length*H+8}`);
+  document.getElementById("gantt").innerHTML=s;
+}
+
+/* ---------- QUIZ ---------- */
+const Q=[
+ {q:"How far from Surveyor 3 did Apollo 12’s lunar module land?",o:["About 18 m","About 180 m","About 1.8 km"],a:1,w:"Intrepid came down about 180 m from Surveyor 3, close enough for the crew to walk over."},
+ {q:"What ended contact with the Viking 1 lander in 1982?",o:["A dust storm","Running out of power","A faulty command sent from Earth"],a:2,w:"On 11 November 1982 a faulty command interrupted communications, and contact was never regained."},
+ {q:"What do the Apollo 12 and Apollo 15 science stations share?",o:["Both were shut down on 30 September 1977","Both were powered by solar panels","Both carried a rover"],a:0,w:"All the ALSEP stations were shut down together on 30 September 1977."},
+ {q:"What happened to Opportunity in June 2018?",o:["A planet-wide dust storm covered its solar panels","It drove into a crater","Its antenna was damaged on landing"],a:0,w:"It last communicated on 10 June 2018, as a dust storm blanketed its location."},
+ {q:"How many flights did the Ingenuity helicopter make?",o:["5","27","72"],a:2,w:"It was planned for five flights in 30 days and completed 72 across nearly three years."},
+ {q:"What did Apollo 12’s discarded ascent stage create?",o:["The first recorded artificial moonquake","A new crater named after Conrad","A radio signal heard on Earth"],a:0,w:"It struck the Moon about 60 km from the seismometer, producing the first recorded artificial moonquake."}
+];
+let qi=0,qs=0;
+function drawQ(){
+  const h=document.getElementById("qz");
+  if(qi>=Q.length){h.innerHTML=`<p class="score">${qs}/${Q.length}</p><p>${qs===Q.length?"Perfect. You know every machine on the register.":qs>=4?"Strong. Open the files for the ones you missed.":"Open the register and read a few files, then try again."}</p><button class="btn" type="button" id="rs">Play again</button>`;document.getElementById("rs").onclick=()=>{qi=0;qs=0;drawQ()};return}
+  const q=Q[qi];
+  h.innerHTML=`<div class="qm mono"><span>Question ${qi+1} of ${Q.length}</span><span>Score ${qs}</span></div><h3>${q.q}</h3><div id="ops">${q.o.map((o,i)=>`<button class="opt" type="button" data-i="${i}">${o}</button>`).join("")}</div><div id="fb" class="fb" aria-live="polite"></div>`;
+  h.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.i,ok=i===q.a;if(ok)qs++;
+    h.querySelectorAll(".opt").forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add("ok");else if(j===i)x.classList.add("no")});
+    document.getElementById("fb").innerHTML=`<b>${ok?"Correct.":"Not quite."}</b> ${q.w}<p style="margin-top:.8rem"><button class="btn" type="button" id="nx">${qi+1>=Q.length?"See score":"Next question"}</button></p>`;
+    document.getElementById("nx").onclick=()=>{qi++;drawQ()};document.getElementById("nx").focus();
+  }));
+}
+
+drawLedger();drawReg();drawMap();drawInfo();drawRuler();drawGantt();drawRec();drawQ();
+try{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.getElementById("bgv").pause()}}catch(e){}
+</script>
+
+</body>
+</html>
