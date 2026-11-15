@@ -1,7 +1,14 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Echoes of Apollo</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Ten NASA machines abandoned on the Moon and Mars: where they are, what they did, and when they went silent.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#08070b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -180,6 +187,39 @@ ol.jr span{font-size:.97rem}
 .drawer h3.sec{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--ink);margin:1.8rem 0 .5rem}
 .drawer .kw{font:600 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--w);display:block;margin-bottom:.2rem}
 
+#ganttm{display:none;padding:.9rem 1rem 1rem}
+.gmax{position:relative;height:1.3rem;font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-bottom:.3rem}
+.gmax span{position:absolute;transform:translateX(-50%)}
+.gm{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--rule);color:inherit;font:inherit;padding:.75rem 0;cursor:pointer}
+.gn{display:block;font-weight:500;font-size:.98rem}
+.gs{display:block;color:var(--dim);font-family:var(--mono);font-size:.75rem;margin-top:.1rem}
+.gt{position:relative;display:block;height:14px;margin-top:.5rem}
+.gb{position:absolute;top:0;bottom:0;background:var(--w);display:block}
+.gl{position:absolute;top:6px;height:0;border-top:2px dashed var(--dim);display:block}
+@media (max-width:700px){.gd{display:none}#ganttm{display:block}}
+
+@media (max-width:860px),(pointer:coarse){
+  nav a{padding:.8rem .8rem}
+  .tab,.mapbar .tab{min-height:44px;padding:.6rem 1rem}
+  .chk{min-height:44px}.chk input{width:20px;height:20px}
+  .lrow,.sites button{padding:.8rem 0}
+  table.rec th button{padding:.7rem 0}
+  table.rec td.n button{padding:.5rem 0}
+  .btn{padding:.9rem 1.2rem}
+}
+@media (max-width:520px){
+  .hero h1{font-size:clamp(3rem,15vw,4.2rem)}
+  .ledger{padding:.8rem .9rem 1rem}
+  .lrow{gap:.5rem}
+  .ln{font-size:.92rem}
+  .plate h3{font-size:1.7rem}
+  .plate .stat{flex-direction:column;gap:.1rem}
+  .info h3{font-size:1.6rem}
+  .ph figcaption{flex-direction:column;gap:.6rem}
+  .drawer{padding-left:1rem}
+  .sh h2{font-size:2.3rem}
+}
+
 @media (max-width:860px){
   .worlds{grid-template-columns:minmax(0,1fr)}
   .maps{grid-template-columns:minmax(0,1fr)}
@@ -189,14 +229,17 @@ ol.jr span{font-size:.97rem}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+</head>
+<body>
+
 
 <div class="bg" aria-hidden="true">
-  <img src="bg.jpg" alt="">
-  <video id="bgv" autoplay muted loop playsinline preload="auto" poster="bg.jpg"><source src="bg.mp4" type="video/mp4"></video>
+  <img src="assets/bg.jpg" alt="">
+  <video id="bgv" autoplay muted loop playsinline preload="auto" poster="assets/bg.jpg"><source src="assets/bg.mp4" type="video/mp4"></video>
 </div>
 
 <header class="top"><div class="wrap">
-  <a class="brand" href="#top">Echoes of <i>Apollo</i></a>
+  <a class="brand" href="#top"><img src="assets/favicon.svg" alt="" width="28" height="28" style="vertical-align:-7px;margin-right:.5rem">Echoes of <i>Apollo</i></a>
   <nav aria-label="Sections">
     <a href="#worlds">Worlds</a><a href="#register">Register</a><a href="#maps">Maps</a><a href="#silence">Timeline</a><a href="#records">Records</a><a href="#quiz">Quiz</a><a href="#about">About</a>
   </nav>
@@ -221,16 +264,16 @@ ol.jr span{font-size:.97rem}
     <div class="sh"><h2>Two worlds, ten stories</h2><p>Between 1967 and 2024 NASA left machines behind on the Moon and on Mars. These photographs show the kinds of hardware that stayed.</p></div>
     <div class="worlds">
       <figure class="ph m">
-        <img src="apollo17-lm.jpg" alt="An Apollo lunar module standing on the Moon with gold foil and a hill behind" width="1173" height="741" loading="lazy">
-        <figcaption><img class="globe" src="moon.jpg" alt="" width="64" height="64"><span><b>The Moon.</b> Four sites on the register. An Apollo lunar module sits on the surface, the same design as Eagle, Intrepid and Falcon (shown: Apollo 17). Its lower stage never left. Credit: NASA</span></figcaption>
+        <img src="assets/apollo17-lm.jpg" alt="An Apollo lunar module standing on the Moon with gold foil and a hill behind" width="1173" height="741" loading="lazy">
+        <figcaption><img class="globe" src="assets/moon.jpg" alt="" width="64" height="64"><span><b>The Moon.</b> Four sites on the register. An Apollo lunar module sits on the surface, the same design as Eagle, Intrepid and Falcon (shown: Apollo 17). Its lower stage never left. Credit: NASA</span></figcaption>
       </figure>
       <figure class="ph r">
-        <img src="mars-rover-concept.jpg" alt="Artist’s concept of a NASA Mars rover on rocky red terrain" width="657" height="686" loading="lazy">
-        <figcaption><img class="globe" src="mars.jpg" alt="" width="64" height="64"><span><b>Mars.</b> Six sites on the register. Artist’s concept of a NASA Mars rover. This type of rover is still working, so it is not on the register. Credit: NASA/JPL-Caltech</span></figcaption>
+        <img src="assets/mars-rover-concept.jpg" alt="Artist’s concept of a NASA Mars rover on rocky red terrain" width="657" height="686" loading="lazy">
+        <figcaption><img class="globe" src="assets/mars.jpg" alt="" width="64" height="64"><span><b>Mars.</b> Six sites on the register. Artist’s concept of a NASA Mars rover. This type of rover is still working, so it is not on the register. Credit: NASA/JPL-Caltech</span></figcaption>
       </figure>
     </div>
     <figure class="ph wide r" style="margin-top:1.4rem">
-      <img src="mars-rovers.jpg" alt="Four Mars rovers in artist’s concepts: Sojourner, Spirit, Opportunity and Curiosity" width="1268" height="716" loading="lazy">
+      <img src="assets/mars-rovers.jpg" alt="Four Mars rovers in artist’s concepts: Sojourner, Spirit, Opportunity and Curiosity" width="1268" height="716" loading="lazy">
       <figcaption><span><b>Four generations of Mars rovers.</b> Sojourner, Spirit and Opportunity are on the register. Curiosity is still operating, so it is not. Credit: NASA/JPL-Caltech</span></figcaption>
     </figure>
   </div></section>
@@ -277,7 +320,8 @@ ol.jr span{font-size:.97rem}
 
   <section class="s" id="silence"><div class="wrap">
     <div class="sh"><h2>Short lives, long silences</h2><p>Solid bars show how long each machine worked after landing. The dashed line runs from its last contact to today. Most have now been silent for far longer than they worked.</p></div>
-    <div class="fig scroll"><svg id="gantt" viewBox="0 0 940 400" role="img" aria-label="Timeline of operating life and silence for ten machines"></svg></div>
+    <div class="fig scroll gd"><svg id="gantt" viewBox="0 0 940 400" role="img" aria-label="Timeline of operating life and silence for ten machines"></svg></div>
+    <div class="fig" id="ganttm"></div>
     <div class="legend"><span><svg width="26" height="8"><rect width="26" height="8" fill="#e3c46d"/></svg>Moon, operating</span><span><svg width="26" height="8"><rect width="26" height="8" fill="#ea8a62"/></svg>Mars, operating</span><span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#b8b2a4" stroke-dasharray="3 3" stroke-width="1.5"/></svg>Silent since</span></div>
   </div></section>
 
@@ -391,12 +435,12 @@ const A=[
 
 /* ---------- STORY + RECORD FIELDS ---------- */
 const IMG={
- lm:{src:"apollo17-lm.jpg",alt:"An Apollo lunar module on the Moon",cap:"An Apollo lunar module on the surface (shown: Apollo 17). Same design as this mission’s. Credit: NASA"},
- s3:{src:"apollo12-surveyor3.jpg",alt:"An Apollo 12 astronaut beside the Surveyor 3 lander, with the lunar module on the horizon",cap:"An Apollo 12 astronaut at Surveyor 3, with the lunar module Intrepid on the horizon. Credit: NASA"},
- mars:{src:"mars.jpg",alt:"Mars from space",cap:"Mars from space."},
- soj:{src:"sojourner.jpg",alt:"Artist’s concept of the Sojourner rover beside a boulder",cap:"Artist’s concept of Sojourner. Credit: NASA/JPL-Caltech"},
- spi:{src:"spirit.jpg",alt:"Artist’s concept of the Spirit rover",cap:"Artist’s concept of Spirit. Credit: NASA/JPL-Caltech"},
- opp:{src:"opportunity.jpg",alt:"Artist’s concept of the Opportunity rover",cap:"Artist’s concept of Opportunity. Credit: NASA/JPL-Caltech"}
+ lm:{src:"assets/apollo17-lm.jpg",alt:"An Apollo lunar module on the Moon",cap:"An Apollo lunar module on the surface (shown: Apollo 17). Same design as this mission’s. Credit: NASA"},
+ s3:{src:"assets/apollo12-surveyor3.jpg",alt:"An Apollo 12 astronaut beside the Surveyor 3 lander, with the lunar module on the horizon",cap:"An Apollo 12 astronaut at Surveyor 3, with the lunar module Intrepid on the horizon. Credit: NASA"},
+ mars:{src:"assets/mars.jpg",alt:"Mars from space",cap:"Mars from space."},
+ soj:{src:"assets/sojourner.jpg",alt:"Artist’s concept of the Sojourner rover beside a boulder",cap:"Artist’s concept of Sojourner. Credit: NASA/JPL-Caltech"},
+ spi:{src:"assets/spirit.jpg",alt:"Artist’s concept of the Spirit rover",cap:"Artist’s concept of Spirit. Credit: NASA/JPL-Caltech"},
+ opp:{src:"assets/opportunity.jpg",alt:"Artist’s concept of the Opportunity rover",cap:"Artist’s concept of Opportunity. Credit: NASA/JPL-Caltech"}
 };
 const X={
 a11:{img:IMG.lm,land:D(1969,7,20),result:"First crewed landing; seismometer and laser reflector left on the surface",
@@ -483,9 +527,9 @@ function drawReg(){
     <p>${a.tag}</p>
     <span class="stat mono"><span>${fmt(a.start)} to ${fmt(a.end)}</span><span>Silent ${ym(a.end,TODAY)}</span></span></button>`).join("");
 }
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+document.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{
   filter=b.dataset.f;
-  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-pressed",String(t===b)));
+  document.querySelectorAll("[data-f]").forEach(t=>t.setAttribute("aria-pressed",String(t===b)));
   drawReg();
 }));
 
@@ -538,24 +582,27 @@ const vis=(lat,lon)=>Math.cos(lat*Math.PI/180)*Math.cos((lon-LON_C)*Math.PI/180)
 const IMPACTS=[{lat:-3.94,lon:-21.2,t:"Apollo 12 ascent stage",dx:16,dy:20,an:"start"},{lat:26.36,lon:0.25,t:"Apollo 15 ascent stage",dx:-14,dy:-12,an:"end"}];
 const MLAB={a11:{dx:-16,dy:-14,an:"end"},a15:{dx:18,dy:8,an:"start"},a12:{dx:-20,dy:-14,an:"end"},s3:{dx:-6,dy:44,an:"end"}};
 function path(pts){let d="",pen=false;pts.forEach(p=>{if(p){d+=(pen?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1);pen=true}else pen=false});return d}
+let FS=18,RR=11;
+const NARROW=()=>window.innerWidth<600;
 function marker(a,x,y,lab){
   const moon=a.w==="moon",sel=a.id===selId;
   const ring=a.id==="s3";
-  return `<g class="mk${sel?" sel":""}" tabindex="0" role="button" data-id="${a.id}" aria-label="${a.name}"><circle class="c" cx="${x}" cy="${y}" r="${ring?16:11}" fill="${ring?"none":(moon?"#e3c46d":"#ea8a62")}" stroke="${moon?"#e3c46d":"#ea8a62"}" stroke-width="${ring?2.5:2}" ${a.approx?'stroke-dasharray="3 3"':''}/><text class="lbl" x="${x+lab.dx}" y="${y+lab.dy}" text-anchor="${lab.an}" fill="#fff">${a.short.split(" · ")[1]===undefined?a.name:(moon?a.name.replace(" and ALSEP","").replace(" and EASEP","").replace(" Eagle","").replace(" Intrepid","").replace(" Falcon",""):a.name.replace(" lander","").replace(" and Sojourner",""))}</text></g>`;
+  return `<g class="mk${sel?" sel":""}" tabindex="0" role="button" data-id="${a.id}" aria-label="${a.name}"><circle class="c" cx="${x}" cy="${y}" r="${ring?RR+5:RR}" fill="${ring?"none":(moon?"#e3c46d":"#ea8a62")}" stroke="${moon?"#e3c46d":"#ea8a62"}" stroke-width="${ring?2.5:2}" ${a.approx?'stroke-dasharray="3 3"':''}/><text class="lbl" style="font-size:${FS}px;${NARROW()&&!sel?"display:none":""}" x="${x+lab.dx}" y="${y+lab.dy}" text-anchor="${lab.an}" fill="#fff">${a.short.split(" · ")[1]===undefined?a.name:(moon?a.name.replace(" and ALSEP","").replace(" and EASEP","").replace(" Eagle","").replace(" Intrepid","").replace(" Falcon",""):a.name.replace(" lander","").replace(" and Sojourner",""))}</text></g>`;
 }
 function drawMap(){
   const svg=document.getElementById("mapsvg");
   const grid=document.getElementById("gridchk").checked,imp=document.getElementById("impchk").checked;
   document.getElementById("impwrap").hidden=mapWorld!=="moon";
   let s="";
+  FS=mapWorld==="moon"?(NARROW()?30:18):(NARROW()?24:14);RR=mapWorld==="moon"?(NARROW()?15:11):(NARROW()?12:8);
   if(mapWorld==="moon"){
     svg.setAttribute("viewBox",zoomed?zoomBox():"0 0 800 800");
-    s+=`<rect width="800" height="800" fill="#050409"/><image href="moon.jpg" x="0" y="0" width="800" height="800" preserveAspectRatio="none"/>`;
+    s+=`<rect width="800" height="800" fill="#050409"/><image href="assets/moon.jpg" x="0" y="0" width="800" height="800" preserveAspectRatio="none"/>`;
     if(grid){
       for(let lo=-60;lo<=60;lo+=30){const pts=[];for(let la=-90;la<=90;la+=3)pts.push(vis(la,lo)?[mx(la,lo),my(la)]:null);s+=`<path d="${path(pts)}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>`}
       for(let la=-60;la<=60;la+=30){const pts=[];for(let lo=-95;lo<=95;lo+=3)pts.push(vis(la,lo)?[mx(la,lo),my(la)]:null);s+=`<path d="${path(pts)}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>`}
     }
-    if(imp)IMPACTS.forEach(q=>{const x=mx(q.lat,q.lon),y=my(q.lat);s+=`<g><circle cx="${x}" cy="${y}" r="7" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M${x-4} ${y-4}l8 8m0-8l-8 8" stroke="#fff" stroke-width="1.4"/><text class="lbl" x="${x+q.dx}" y="${y+q.dy}" text-anchor="${q.an}" fill="#fff" style="font-size:15px">${q.t}</text></g>`});
+    if(imp)IMPACTS.forEach(q=>{const x=mx(q.lat,q.lon),y=my(q.lat);s+=`<g><circle cx="${x}" cy="${y}" r="7" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M${x-4} ${y-4}l8 8m0-8l-8 8" stroke="#fff" stroke-width="1.4"/><text class="lbl" x="${x+q.dx}" y="${y+q.dy}" text-anchor="${q.an}" fill="#fff" style="font-size:15px;${NARROW()?"display:none":""}">${q.t}</text></g>`});
     ["s3","a12","a11","a15"].forEach(id=>{const a=byId[id];s+=marker(a,mx(a.lat,a.lon),my(a.lat),MLAB[id])});
     document.getElementById("mapcap").textContent="Lunar near side. Orthographic view over a photograph; markers use coordinates measured from Lunar Reconnaissance Orbiter images. Grid every 30°.";
   }else{
@@ -566,7 +613,7 @@ function drawMap(){
       for(let la=-60;la<=60;la+=30)s+=`<path d="M0 ${Y(la)}H720" stroke="#fff" stroke-opacity="${la===0?.45:.22}"/><text x="4" y="${Y(la)-3}" style="font-size:11px;fill:#f3e3d3">${la===0?"Equator":Math.abs(la)+"°"+(la<0?"S":"N")}</text>`}
     [["Olympus Mons",18.65,-133.8],["Valles Marineris",-13,-59],["Hellas Planitia",-42.4,70.5]].forEach(f=>{s+=`<g><circle cx="${X(f[2])}" cy="${Y(f[1])}" r="2.5" fill="#f3e3d3"/><text x="${X(f[2])+6}" y="${Y(f[1])+3}" style="font-size:12px;fill:#f3e3d3;font-style:italic">${f[0]}</text></g>`});
     const ML={v1:{dx:-12,dy:-10,an:"end"},pf:{dx:12,dy:-8,an:"start"},op:{dx:12,dy:18,an:"start"},ig:{dx:12,dy:-8,an:"start"},in:{dx:-12,dy:-10,an:"end"},sp:{dx:-12,dy:-10,an:"end"}};
-    ["v1","pf","op","ig","in","sp"].forEach(id=>{const a=byId[id];s+=marker(a,X(a.lon),Y(a.lat),ML[id]).replace('r="9"','r="8"').replace('class="lbl"','class="lbl" style="font-size:14px"')});
+    ["v1","pf","op","ig","in","sp"].forEach(id=>{const a=byId[id];s+=marker(a,X(a.lon),Y(a.lat),ML[id])});
     document.getElementById("mapcap").textContent="Mars, equirectangular chart. Viking 1 and InSight use coordinates from the supplied NASA pages; dashed markers are approximate positions from NASA mission pages. Landmarks are for orientation.";
   }
   svg.innerHTML=s;
@@ -649,6 +696,15 @@ function drawGantt(){
   document.getElementById("gantt").innerHTML=s;
 }
 
+
+function drawGanttM(){
+  const y0=1966,y1=2027,pc=d=>(dec(d)-y0)/(y1-y0)*100;
+  const rows=[...A].sort((a,b)=>a.start-b.start);
+  let h='<div class="gmax" aria-hidden="true">'+[1970,1980,1990,2000,2010,2020].map(y=>`<span style="left:${(y-y0)/(y1-y0)*100}%">${y}</span>`).join("")+'</div>';
+  h+=rows.map(a=>{const l=pc(a.start),e=Math.max(pc(a.end),l+1),t=pc(TODAY);
+    return `<button type="button" class="gm ${cls(a)}" data-id="${a.id}"><span class="gn">${a.name}</span><span class="gs">ran ${ran(a.start,a.end)} · silent ${ym(a.end,TODAY)}</span><span class="gt"><i class="gb" style="left:${l}%;width:${e-l}%"></i><i class="gl" style="left:${e}%;right:${100-t}%"></i></span></button>`}).join("");
+  document.getElementById("ganttm").innerHTML=h;
+}
 /* ---------- QUIZ ---------- */
 const Q=[
  {q:"How far from Surveyor 3 did Apollo 12’s lunar module land?",o:["About 18 m","About 180 m","About 1.8 km"],a:1,w:"Intrepid came down about 180 m from Surveyor 3, close enough for the crew to walk over."},
@@ -672,8 +728,10 @@ function drawQ(){
   }));
 }
 
-drawLedger();drawReg();drawMap();drawInfo();drawRuler();drawGantt();drawRec();drawQ();
+let lastN=NARROW();window.addEventListener("resize",()=>{const n=NARROW();if(n!==lastN){lastN=n;drawMap()}});
+drawLedger();drawReg();drawMap();drawInfo();drawRuler();drawGantt();drawGanttM();drawRec();drawQ();
 try{if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){document.getElementById("bgv").pause()}}catch(e){}
 </script>
 
-</body></html>
+</body>
+</html>
